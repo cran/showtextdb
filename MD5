@@ -1,0 +1,9 @@
+35f5b49f7bbc0d4ae54bf4956cffe874 *DESCRIPTION
+19e27b0cc632d0ca1db30dc87e51c636 *NAMESPACE
+3df0c4bf353f9fe58620cc0cd0ccce4f *R/load_fonts.R
+3b273eccfa8d9c54b610ff50d35c3816 *inst/AUTHORS
+95fbd0fef290cd3b79e2d80aebe8f2e1 *inst/COPYRIGHTS
+00f4c7bb8a91da2da759b448dac7d63a *inst/fonts/AUTHORS.txt.tar.gz
+400d2f704f0a4f27b035fb613c8ae0ec *inst/fonts/LICENSE_Apache2.txt
+98086146fd94258b5f83dbf87e1b759c *inst/fonts/wqy-microhei.ttc.zip
+836c16842d86bdebbc006af0626b5d85 *man/load_fonts.Rd
