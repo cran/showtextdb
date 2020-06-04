@@ -8,7 +8,7 @@
 #' \code{font_installed()} lists fonts that have been installed to
 #' \pkg{showtextdb}.
 #' 
-#' \strong{NOTE}: Since the fonts are installed locally to the pakcage directory,
+#' \strong{NOTE}: Since the fonts are installed locally to the package directory,
 #' they will be removed every time the \pkg{showtextdb} package is upgraded or
 #' re-installed.
 #' 
@@ -35,7 +35,7 @@
 #' for an example of the \code{font_desc} parameter.
 #' 
 #' @export
-#' @author Yixuan Qiu <\url{http://statr.me/}>
+#' @author Yixuan Qiu <\url{https://statr.me/}>
 #' @examples \dontrun{
 #' ## Install Source Han Serif Simplified Chinese
 #' font_install(source_han_serif())
@@ -64,11 +64,21 @@ font_install = function(font_desc, quiet = FALSE, ...)
     font_desc = as.list(font_desc)
     name = font_desc$showtext_name
     ext  = font_desc$font_ext
-    
+
     ## font_desc must contain a URL for the regular font face
     if(!("regular_url" %in% names(font_desc)))
         stop("'font_desc' must contain a component named 'regular_url'")
-    
+
+    ## The directory that contains the user fonts
+    font_db = system.file("fonts", package = "showtextdb")
+    ## Test for write permission
+    if(file.access(font_db, mode = 2) < 0)
+    {
+        msg = paste("the %s directory does not have write permission,",
+                    "unable to install fonts", sep = "\n")
+        stop(sprintf(msg, font_db))
+    }
+
     ## Create a directory with the font family name
     font_dir = file.path(system.file("fonts", package = "showtextdb"), name)
     if(!dir.exists(font_dir))
@@ -81,7 +91,7 @@ font_install = function(font_desc, quiet = FALSE, ...)
             message("downloading the 'regular' font face...")
         curl::curl_download(font_desc$regular_url, regular_file, quiet = quiet, ...)
     }
-    
+
     other_faces = c("bold", "italic", "bolditalic", "symbol")
     for(face in other_faces)
     {
@@ -95,13 +105,12 @@ font_install = function(font_desc, quiet = FALSE, ...)
                     message(sprintf("downloading the '%s' font face...", face))
                 curl::curl_download(face_url, face_file, quiet = quiet, ...)
             }
-
         }
     }
-    
+
     ## Load the newly installed font
     load_user_fonts()
-    
+
     invisible(NULL)
 }
 
@@ -110,17 +119,17 @@ font_installed = function()
 {
     ## The directory that contains the user fonts
     font_db = system.file("fonts", package = "showtextdb")
-    
+
     ## Each folder under fonts_db is considered a user font with different font faces
     font_dirs = list.dirs(font_db, recursive = FALSE)
     if(!length(font_dirs))
         return(character(0))
-    
+
     ## We require that a legitimate font directory must contain a "regular" font face file
     has_regular = sapply(font_dirs, function(dir) {
         regular_file = list.files(dir, pattern = "^regular\\.[[:alnum:]]+$")
         length(regular_file) > 0
     })
-    
+
     basename(font_dirs[has_regular])
 }
